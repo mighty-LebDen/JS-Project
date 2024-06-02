@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Sort Lists</title>
+  <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+  <style>
+    div {
+      font-size: 24px;
+    }
+
+
+    li {
+      margin-bottom: 0;
+    }
+  </style>
+  <script>
+    function sortUlbyId(id) {
+      let ulElement = document.getElementById(id);
+      const nestedUlElements = Array.from(ulElement.querySelectorAll('li'));
+      const innerUl = ulElement.querySelector('ul');
+      const liElement = Array.from(innerUl.querySelectorAll('li'));
+      let firstLevelLiElements = Array.from(innerUl.children).filter(li => !li.querySelector('li'));
+      let nestedInnerUl = Array.from(innerUl.children).filter(li => li.querySelector('ul'));
+      if (nestedInnerUl.length != 0) {
+        for (i = 0; i < nestedInnerUl.length; i++) {
+          firstLevelLiElements.push(nestedInnerUl[i]);
+        }
+      }
+      firstLevelLiElements.sort(function (a, b) {
+        return a.childNodes[0].data.localeCompare(b.childNodes[0].data, 'en');
+      });
+
+      for (let i = 0; i < firstLevelLiElements.length; i++) {
+        if (hasNestedUL(firstLevelLiElements[i])) {
+          let inner = firstLevelLiElements[i].querySelector('ul');
+          let liInnerElement = Array.from(inner.querySelectorAll('li'));
+          liInnerElement.sort(function (a, b) {
+            return a.childNodes[0].data.localeCompare(b.childNodes[0].data, 'en');
+          });
+          let values = [];
+          for (let j = 0; j < liInnerElement.length; j++) {
+            values[j] = liInnerElement[j];
+          }
+          while (inner.firstChild) {
+            inner.removeChild(inner.firstChild);
+          }
+          for (let j = 0; j < values.length; j++) {
+            inner.appendChild(values[j]);
+          }
+        }
+      }
+      let values = [];
+      for (let i = 0; i < firstLevelLiElements.length; i++) {
+        values[i] = firstLevelLiElements[i];
+      }
+      while (innerUl.firstChild) {
+        innerUl.removeChild(innerUl.firstChild);
+      }
+      for (let i = 0; i < values.length; i++) {
+        innerUl.appendChild(values[i]);
+      }
+    }
+
+    function sortAllUl() {
+      sortUlbyId("firstChild");
+      sortUlbyId("secondChild");
+      sortUlbyId("thirdChild");
+      let ulElement = document.getElementById("myList");
+      const nestedUlElements = Array.from(ulElement.children).filter(li => li.querySelector('li'))
+      nestedUlElements.sort(function (a, b) {
+        return a.childNodes[0].data.localeCompare(b.childNodes[0].data, 'en');
+      });
+      let values = [];
+      for (let i = 0; i < nestedUlElements.length; i++) {
+        values[i] = nestedUlElements[i];
+      }
+      while (nestedUlElements.firstChild) {
+        nestedUlElements.removeChild(nestedUlElements.firstChild);
+      }
+      for (let i = 0; i < values.length; i++) {
+        ulElement.appendChild(values[i]);
+      }
+    }
+    function hasNestedUL(elem) {
+      return elem.querySelector('ul') !== null;
+    }
+
+  </script>
+</head>
+<body>
+  <ul id="myList">
+    <li id="firstChild">Введение в JavaScript
+      <ul>
+        <li>Размещение скриптов на HTML-страницах</li>
+        <li>Синтаксис языка</li>
+        <li>Типы данных
+          <ul>
+            <li>Объект Global</li>
+            <li>Оборачивание (wrapping), изменчивость (mutability)</li>
+            <li>Преобразование типов, основные методы: toString, valueOf</li>
+            <li>Инициализация объектов, массивов и функций</li>
+          </ul>
+        </li>
+        <li>Переменные и область видимости</li>
+        <li>Операторы языка</li>
+        <li>Выражения: условия и циклы</li>
+        <li>Операторы перехода (label, break, continue, return)</li>
+        <li>Исключения и обработка ошибок: try/catch/finally, throw</li>
+      </ul>
+    </li>
+    <li id="secondChild">Работа с объектами в JavaScript
+      <ul>
+        <li>Создание объектов</li>
+        <li>Доступ к свойствам: опрос, добавление, удаление и перечисление свойств</li>
+        <li>Массивы, методы работы с массивами</li>
+        <li>Функции и передача параметров</li>
+      </ul>
+    </li>
+    <li id="thirdChild">JavaScript в браузере
+      <ul>
+        <li>Очередность выполнения скриптов</li>
+        <li>DOM: объектная модель документа
+          <ul>
+            <li>Основные объекты браузера, объект Window</li>
+            <li>Объект Document: поиск и работа с элементами</li>
+            <li>Настройка и изменение стилей документа</li>
+            <li>Обработка событий</li>
+            <li>Графика: элемент canvas</li>
+          </ul>
+        </li>
+        <li>Работа с формами: валидация данных, регулярные выражения</li>
+      </ul>
+    </li>
+  </ul>
+  <button style="font-size: 20px;" onclick="sortAllUl()" id="button">Сортировка</button>
+</body>
+
+</html>
